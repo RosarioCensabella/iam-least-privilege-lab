@@ -33,3 +33,7 @@ aws-credentials*
 # Terraform plan files
 *.tfplan
 *.plan
+
+# Terraform backend local config
+**/backend.hcl
+!**/backend.hcl.example

@@ -1,0 +1,6 @@
+bucket       = "iam-lab-tfstate-yourname-YYYYMMDD"
+key          = "iam-least-privilege-lab/dev/terraform.tfstate"
+region       = "eu-west-1"
+profile      = "iam-lab"
+encrypt      = true
+use_lockfile = true
