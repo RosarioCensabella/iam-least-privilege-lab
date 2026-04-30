@@ -75,17 +75,28 @@ data "aws_iam_policy_document" "developer" {
   }
 
   statement {
-    sid    = "AllowReadDeveloperApplicationLogs"
+    sid    = "AllowDescribeAndFilterDeveloperApplicationLogs"
     effect = "Allow"
 
     actions = [
       "logs:DescribeLogStreams",
-      "logs:GetLogEvents",
       "logs:FilterLogEvents"
     ]
 
     resources = [
-      var.cloudwatch_log_group_arn,
+      var.cloudwatch_log_group_arn
+    ]
+  }
+
+  statement {
+    sid    = "AllowGetDeveloperApplicationLogEvents"
+    effect = "Allow"
+
+    actions = [
+      "logs:GetLogEvents"
+    ]
+
+    resources = [
       var.cloudwatch_log_streams_arn
     ]
   }
