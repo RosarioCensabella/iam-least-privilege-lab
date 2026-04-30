@@ -13,11 +13,8 @@ data "aws_iam_policy_document" "assume_role" {
     ]
 
     principals {
-      type = "AWS"
-
-      identifiers = [
-        var.trusted_principal_arn
-      ]
+      type        = "AWS"
+      identifiers = var.trusted_principal_arns
     }
 
     condition {

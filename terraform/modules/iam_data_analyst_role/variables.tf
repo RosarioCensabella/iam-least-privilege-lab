@@ -13,7 +13,7 @@ variable "bucket_arn" {
   type        = string
 }
 
-variable "trusted_principal_arn" {
-  description = "ARN of the principal allowed to assume the data analyst role."
-  type        = string
+variable "trusted_principal_arns" {
+  description = "ARNs of the principals allowed to assume the data analyst role."
+  type        = list(string)
 }

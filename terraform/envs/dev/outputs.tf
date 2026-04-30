@@ -117,3 +117,28 @@ output "security_auditors_group_name" {
   description = "Name of the security auditors IAM group."
   value       = module.iam_users_groups.security_auditors_group_name
 }
+
+output "developer_policy_arn" {
+  description = "ARN of the developer least privilege policy."
+  value       = module.iam_least_privilege_policies.developer_policy_arn
+}
+
+output "data_analyst_assume_role_policy_arn" {
+  description = "ARN of the data analyst assume role policy."
+  value       = module.iam_least_privilege_policies.data_analyst_assume_role_policy_arn
+}
+
+output "security_auditor_policy_arn" {
+  description = "ARN of the security auditor read-only policy."
+  value       = module.iam_least_privilege_policies.security_auditor_policy_arn
+}
+
+output "developer_log_group_name" {
+  description = "Name of the CloudWatch log group used for developer read-only log access."
+  value       = module.cloudwatch_app_logs.log_group_name
+}
+
+output "developer_log_stream_name" {
+  description = "Name of the CloudWatch log stream used for developer read-only log access."
+  value       = module.cloudwatch_app_logs.log_stream_name
+}
