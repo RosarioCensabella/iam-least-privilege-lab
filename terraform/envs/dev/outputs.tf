@@ -52,3 +52,23 @@ output "access_analyzer_arn" {
   description = "ARN of the IAM Access Analyzer."
   value       = module.iam_access_analyzer.analyzer_arn
 }
+
+output "s3_development_bucket_name" {
+  description = "Name of the S3 development bucket."
+  value       = module.s3_development_bucket.bucket_name
+}
+
+output "s3_development_bucket_arn" {
+  description = "ARN of the S3 development bucket."
+  value       = module.s3_development_bucket.bucket_arn
+}
+
+output "s3_production_bucket_name" {
+  description = "Name of the S3 production bucket."
+  value       = module.s3_production_bucket.bucket_name
+}
+
+output "s3_production_bucket_arn" {
+  description = "ARN of the S3 production bucket."
+  value       = module.s3_production_bucket.bucket_arn
+}
