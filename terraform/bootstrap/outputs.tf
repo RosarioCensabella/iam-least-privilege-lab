@@ -15,7 +15,7 @@ output "state_bucket_region" {
 
 output "backend_hcl_example" {
   description = "Backend configuration example for terraform/envs/dev/backend.hcl."
-  value = <<EOT
+  value       = <<EOT
 bucket       = "${aws_s3_bucket.terraform_state.bucket}"
 key          = "iam-least-privilege-lab/dev/terraform.tfstate"
 region       = "${var.aws_region}"

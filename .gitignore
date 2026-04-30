@@ -1,16 +1,25 @@
-# Terraform local files
+# Terraform local directories
 **/.terraform/*
+
+# Terraform state files
 *.tfstate
 *.tfstate.*
-crash.log
-crash.*.log
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform plan files
+*.tfplan
+*.tfplan.*
+*.plan
 
 # Terraform variable files with real values
 *.tfvars
 *.tfvars.json
-
-# Keep example variable files
 !*.tfvars.example
+
+# Terraform backend config with real environment values
+terraform/envs/*/backend.hcl
+!terraform/envs/*/backend.hcl.example
 
 # Terraform override files
 override.tf
@@ -18,22 +27,27 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 
-# Local environment files
+# Crash logs
+crash.log
+crash.*.log
+
+# Local environment and credential files
 .env
 .env.*
 aws-credentials*
 *.pem
 *.key
 
-# OS / editor files
+# Local test files
+terraform/envs/dev/data-analyst-policy.json
+terraform/envs/dev/sample-report.txt
+terraform/envs/dev/downloaded-sample-report.txt
+terraform/envs/dev/internal-evidence.txt
+terraform/envs/dev/unauthorized-upload.txt
+terraform/envs/dev/cloudtrail-assume-role-events.json
+
+# OS and editor files
 .DS_Store
+Thumbs.db
 .vscode/
 .idea/
-
-# Terraform plan files
-*.tfplan
-*.plan
-
-# Terraform backend local config
-**/backend.hcl
-!**/backend.hcl.example

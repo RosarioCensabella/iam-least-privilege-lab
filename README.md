@@ -1,130 +1,306 @@
-\# IAM Least Privilege Lab
+# IAM Least Privilege Lab
 
+## Overview
 
+This project is a hands-on AWS security lab focused on IAM least privilege, Terraform, temporary credentials, and access validation.
 
-\## Project Overview
+The scenario simulates a consulting engagement for **NovaCloud Analytics S.r.l.**, a company that wants to reduce the risk of excessive AWS permissions for its analytics workloads.
 
+The lab provisions a secure S3 data bucket and an IAM role that allows data analysts to read only the authorized reports prefix.
 
+---
 
-This project is a hands-on AWS security lab focused on Identity and Access Management, least privilege design, temporary access, logging, and detection.
+## Business Scenario
 
+NovaCloud Analytics stores internal analytics reports in Amazon S3.
 
+Data analysts need read-only access to report files, but they must not be able to:
 
-The lab simulates a consulting engagement for \*\*NovaCloud Analytics S.r.l.\*\*, a small cloud analytics company that needs to reduce excessive AWS permissions and improve visibility over identity-based access.
+- modify objects;
+- delete objects;
+- access internal evidence files;
+- browse unrelated bucket paths;
+- administer bucket settings.
 
+The goal is to implement and validate a least privilege access model.
 
+---
 
-The goal is to design and implement a secure AWS IAM environment using Terraform, following cloud security best practices and documenting the reasoning behind each architectural and security decision.
+## What This Project Demonstrates
 
+This project demonstrates:
 
+- Terraform project structure with environments and modules;
+- Terraform remote state using an S3 backend;
+- S3 security baseline controls;
+- IAM role design;
+- custom IAM policies;
+- AWS STS role assumption;
+- temporary credentials;
+- positive and negative access testing;
+- evidence-based security validation.
 
-\## Business Scenario
+---
 
+## Current Architecture
 
+    AWS Account
+    │
+    ├── Terraform Remote State Bucket
+    │
+    └── IAM Least Privilege Lab
+        │
+        ├── S3 Data Bucket
+        │   ├── reports/
+        │   │   └── sample-report.txt
+        │   └── evidence/
+        │       └── internal-evidence.txt
+        │
+        └── IAM Role
+            └── data-analyst-readonly
 
-NovaCloud Analytics S.r.l. uses AWS to store and process internal analytics data. Over time, IAM permissions have become too broad, with users and roles having access beyond what they actually need.
+Detailed architecture documentation:
 
+    docs/architecture.md
+	docs/incident-response-runbook.md
 
+---
 
-The company wants to:
+## Implemented AWS Resources
 
+### S3 Data Bucket
 
+Bucket:
 
-\- Reduce excessive permissions
+    novacloud-iam-lab-dev-606895006811
 
-\- Enforce least privilege access
+Security controls:
 
-\- Use temporary credentials where appropriate
+- public access blocked;
+- server-side encryption enabled;
+- versioning enabled;
+- Terraform-managed configuration;
+- logical prefixes for reports and evidence.
 
-\- Improve auditability through logging
+### IAM Data Analyst Role
 
-\- Detect risky IAM configurations
+Role:
 
-\- Produce evidence for security review and portfolio documentation
+    novacloud-iam-lab-dev-data-analyst-readonly
 
+Policy:
 
+    novacloud-iam-lab-dev-data-analyst-s3-readonly
 
-\## Security Focus
+The role allows:
 
+- `s3:GetBucketLocation`;
+- `s3:ListBucket` only for the `reports/` prefix;
+- `s3:GetObject` only for objects under `reports/*`.
 
+The role does not allow:
 
-This lab focuses on the following areas:
+- object uploads;
+- object deletion;
+- reading `evidence/`;
+- unrestricted bucket listing;
+- bucket administration.
 
+---
 
+## Terraform Structure
 
-\- IAM users, groups, roles, and policies
+    terraform/
+    ├── bootstrap/
+    │   ├── main.tf
+    │   ├── outputs.tf
+    │   ├── variables.tf
+    │   └── versions.tf
+    │
+    ├── envs/
+    │   └── dev/
+    │       ├── backend.hcl
+    │       ├── main.tf
+    │       ├── outputs.tf
+    │       ├── providers.tf
+    │       ├── variables.tf
+    │       └── versions.tf
+    │
+    └── modules/
+        ├── s3_data_bucket/
+        │   ├── main.tf
+        │   ├── outputs.tf
+        │   └── variables.tf
+        │
+        └── iam_data_analyst_role/
+            ├── main.tf
+            ├── outputs.tf
+            └── variables.tf
 
-\- Least privilege permissions
+---
 
-\- MFA-aware access design
+## Terraform Workflow
 
-\- Temporary access through role assumption
+### Bootstrap phase
 
-\- IAM Access Analyzer findings
+The `terraform/bootstrap` folder creates the infrastructure required for Terraform remote state.
 
-\- CloudTrail-based visibility
+This phase prepares the S3 backend used by the `dev` environment.
 
-\- Detection logic and incident response notes
+### Dev environment
 
-\- Terraform-based infrastructure as code
+The `terraform/envs/dev` folder provisions the actual lab resources.
 
+Common commands:
 
+    cd terraform\envs\dev
+    terraform init -reconfigure "-backend-config=backend.hcl"
+    terraform validate
+    terraform plan
+    terraform apply
 
-\## Repository Structure
+---
 
+## Validation Summary
 
+The IAM role was tested using AWS STS temporary credentials.
 
-```text
+Positive tests:
 
-iam-least-privilege-lab/
+| Action | Result |
+|---|---|
+| Assume role | Allowed |
+| List `reports/` | Allowed |
+| Download report file | Allowed |
 
-├── docs/
+Negative tests:
 
-├── evidence/
+| Action | Result |
+|---|---|
+| List bucket root | Denied |
+| Read `evidence/` | Denied |
+| Upload object | Denied |
+| Delete object | Denied |
 
-├── policies/
+Evidence:
 
-├── scripts/
+    evidence/checkpoint-04-iam-readonly-tests.md
+    docs/evidence.md
 
-└── terraform/
+---
 
-&#x20;   ├── bootstrap/
+## Example STS Test
 
-&#x20;   ├── envs/
+The data analyst role was assumed using AWS STS:
 
-&#x20;   │   └── dev/
+    $roleArn = terraform output -raw data_analyst_role_arn
 
-&#x20;   └── modules/
+    $assumeRole = aws sts assume-role `
+      --role-arn $roleArn `
+      --role-session-name data-analyst-readonly-test `
+      --profile iam-lab | ConvertFrom-Json
 
+Temporary credentials were exported into the PowerShell session:
 
+    $env:AWS_ACCESS_KEY_ID = $assumeRole.Credentials.AccessKeyId
+    $env:AWS_SECRET_ACCESS_KEY = $assumeRole.Credentials.SecretAccessKey
+    $env:AWS_SESSION_TOKEN = $assumeRole.Credentials.SessionToken
+    $env:AWS_DEFAULT_REGION = "eu-west-1"
 
-Planned Deliverables
+Caller identity after assuming the role:
 
-Deliverable	Purpose
+    arn:aws:sts::606895006811:assumed-role/novacloud-iam-lab-dev-data-analyst-readonly/data-analyst-readonly-test
 
-README.md	Project overview, business scenario, architecture, and security goals
+---
 
-Terraform	Infrastructure as Code for IAM, logging, Access Analyzer, and supporting resources
+## Security Notes
 
-Architecture Diagram	Cloud architecture and trust boundaries
+Security design notes are available in:
 
-Security Notes	Threats, controls, limitations, and production improvements
+    docs/security-notes.md
 
-Detection	Log sources, SIEM-style queries, alerts, and runbook
+Main security principle:
 
-Evidence	CLI outputs, screenshots, findings, and remediation proof
+> Grant only the minimum permissions required, only on the required resources, and validate the result with both allowed and denied tests.
 
-Cost Control	Cleanup process and cost awareness
+---
 
+## Evidence Collected
 
+The project includes evidence for:
 
-Status
+- Terraform environment validation;
+- S3 data bucket creation;
+- S3 public access block;
+- S3 server-side encryption;
+- S3 versioning;
+- IAM role creation;
+- IAM custom policy creation;
+- STS role assumption;
+- positive read-only tests;
+- negative denied-access tests.
 
-This project is currently under active development.
+Evidence index:
 
+    docs/evidence.md
 
+Detailed IAM test evidence:
 
-Current phase:
+    evidence/checkpoint-04-iam-readonly-tests.md
 
-Repository initialization and Terraform remote state bootstrap
+---
 
+## Current Status
+
+Completed:
+
+- Terraform environment setup;
+- remote state bootstrap;
+- S3 data bucket module;
+- S3 baseline security controls;
+- IAM read-only role module;
+- STS assume-role testing;
+- positive and negative least privilege validation;
+- initial project documentation;
+- MFA requirement for role assumption;
+- IAM Access Analyzer account-level review;
+- IAM custom policy validation with no findings;
+- CloudTrail Event History review for STS AssumeRole events;
+- detection evidence for role assumption activity;
+- detection notes for IAM and S3 access monitoring;
+- incident response runbook for suspicious IAM and S3 activity;
+
+Planned next steps:
+
+- add CloudTrail data events for S3 object-level detection;
+- add SIEM-style queries;
+- add incident response runbook;
+- add cost control and teardown instructions;
+
+
+---
+
+## Security Limitations
+
+This is a learning lab and not a full production architecture.
+
+Current limitations:
+
+- the trusted principal is a lab IAM user;
+- MFA enforcement is not implemented yet;
+- IAM Identity Center is not implemented yet;
+- CloudTrail detection and alerting are not implemented yet;
+- IAM Access Analyzer review is not implemented yet;
+- KMS customer-managed keys are not used yet;
+- CI/CD validation is not implemented yet.
+
+---
+
+## Cleanup
+
+To avoid unnecessary AWS costs, destroy the lab environment when it is no longer needed:
+
+    cd terraform\envs\dev
+    terraform destroy
+
+The bootstrap remote state infrastructure should be destroyed only when the project is fully finished and the remote state is no longer needed.

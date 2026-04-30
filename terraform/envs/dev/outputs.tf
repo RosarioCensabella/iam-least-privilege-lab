@@ -17,3 +17,38 @@ output "environment" {
   description = "Current Terraform environment."
   value       = var.environment
 }
+
+output "s3_data_bucket_name" {
+  description = "Name of the S3 data bucket used for the IAM least privilege lab."
+  value       = module.s3_data_bucket.bucket_name
+}
+
+output "s3_data_bucket_arn" {
+  description = "ARN of the S3 data bucket used for the IAM least privilege lab."
+  value       = module.s3_data_bucket.bucket_arn
+}
+
+output "data_analyst_role_name" {
+  description = "Name of the IAM role used by data analysts."
+  value       = module.iam_data_analyst_role.role_name
+}
+
+output "data_analyst_role_arn" {
+  description = "ARN of the IAM role used by data analysts."
+  value       = module.iam_data_analyst_role.role_arn
+}
+
+output "data_analyst_policy_arn" {
+  description = "ARN of the IAM policy attached to the data analyst role."
+  value       = module.iam_data_analyst_role.policy_arn
+}
+
+output "access_analyzer_name" {
+  description = "Name of the IAM Access Analyzer."
+  value       = module.iam_access_analyzer.analyzer_name
+}
+
+output "access_analyzer_arn" {
+  description = "ARN of the IAM Access Analyzer."
+  value       = module.iam_access_analyzer.analyzer_arn
+}

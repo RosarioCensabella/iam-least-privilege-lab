@@ -1,0 +1,32 @@
+﻿[
+    {
+        "Time": "2026-04-30T12:36:57+02:00",
+        "EventId": "429f72bf-2bab-4750-9d25-130e57866bb0",
+        "Source": "sts.amazonaws.com",
+        "Username": "terraform-lab-admin"
+    },
+    {
+        "Time": "2026-04-30T12:23:41+02:00",
+        "EventId": "d48003c8-dc05-4fc6-896a-63395b253278",
+        "Source": "sts.amazonaws.com",
+        "Username": "terraform-lab-admin"
+    },
+    {
+        "Time": "2026-04-30T11:33:29+02:00",
+        "EventId": "0c93b960-2704-40da-8e45-56ba2ccbf387",
+        "Source": "sts.amazonaws.com",
+        "Username": "terraform-lab-admin"
+    },
+    {
+        "Time": "2026-04-30T11:07:16+02:00",
+        "EventId": "d429d79f-5993-437e-8022-7181f8707cb4",
+        "Source": "sts.amazonaws.com",
+        "Username": "terraform-lab-admin"
+    },
+    {
+        "Time": "2026-04-30T11:04:13+02:00",
+        "EventId": "03491c22-2fe0-43ea-8f48-c2f1f85b394f",
+        "Source": "sts.amazonaws.com",
+        "Username": "terraform-lab-admin"
+    }
+]
