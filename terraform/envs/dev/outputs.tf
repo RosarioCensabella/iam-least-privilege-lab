@@ -72,3 +72,48 @@ output "s3_production_bucket_arn" {
   description = "ARN of the S3 production bucket."
   value       = module.s3_production_bucket.bucket_arn
 }
+
+output "developer_user_name" {
+  description = "Name of the developer IAM user."
+  value       = module.iam_users_groups.developer_user_name
+}
+
+output "developer_user_arn" {
+  description = "ARN of the developer IAM user."
+  value       = module.iam_users_groups.developer_user_arn
+}
+
+output "data_analyst_user_name" {
+  description = "Name of the data analyst IAM user."
+  value       = module.iam_users_groups.data_analyst_user_name
+}
+
+output "data_analyst_user_arn" {
+  description = "ARN of the data analyst IAM user."
+  value       = module.iam_users_groups.data_analyst_user_arn
+}
+
+output "security_auditor_user_name" {
+  description = "Name of the security auditor IAM user."
+  value       = module.iam_users_groups.security_auditor_user_name
+}
+
+output "security_auditor_user_arn" {
+  description = "ARN of the security auditor IAM user."
+  value       = module.iam_users_groups.security_auditor_user_arn
+}
+
+output "developers_group_name" {
+  description = "Name of the developers IAM group."
+  value       = module.iam_users_groups.developers_group_name
+}
+
+output "data_analysts_group_name" {
+  description = "Name of the data analysts IAM group."
+  value       = module.iam_users_groups.data_analysts_group_name
+}
+
+output "security_auditors_group_name" {
+  description = "Name of the security auditors IAM group."
+  value       = module.iam_users_groups.security_auditors_group_name
+}

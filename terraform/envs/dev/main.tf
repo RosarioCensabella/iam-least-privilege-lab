@@ -56,3 +56,10 @@ module "iam_access_analyzer" {
   project_name = "novacloud-iam-lab"
   environment  = var.environment
 }
+
+module "iam_users_groups" {
+  source = "../../modules/iam_users_groups"
+
+  project_name = "novacloud-iam-lab"
+  environment  = var.environment
+}
