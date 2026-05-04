@@ -1,0 +1,61 @@
+# Screenshot Evidence
+
+This folder contains selected visual evidence for the AWS IAM Least Privilege Lab.
+
+The screenshots are organized to support the main security story of the project: moving from risky IAM access patterns to a controlled least privilege model using Terraform, IAM groups, scoped policies, MFA-protected role assumption, Access Analyzer review, CloudTrail audit evidence, and positive/negative access validation.
+
+## Screenshot Index
+
+| File | Evidence Purpose |
+|---|---|
+| `01-repository-structure.png` | Shows the repository structure, including documentation, evidence, policies, scripts, and Terraform code. |
+| `02-terraform-managed-resources.png` | Demonstrates that AWS resources are managed through Terraform rather than manually created in the console. |
+| `03-terraform-outputs-remediation.png` | Shows Terraform outputs after the least privilege remediation was applied. |
+| `04-insecure-developer-policy-baseline.png` | Documents the insecure baseline example where the Developer had overly broad S3 permissions. |
+| `05-insecure-trust-policy-baseline.png` | Documents the insecure trust policy baseline before MFA-protected role assumption was enforced. |
+| `06-s3-environment-separation.png` | Shows separate S3 buckets for development, data, and production access-boundary testing. |
+| `07-s3-development-bucket-prefixes.png` | Shows the development bucket prefixes used for authorized Developer access tests. |
+| `08-s3-production-bucket-protected-prefix.png` | Shows the protected production prefix used for negative access testing. |
+| `09-s3-security-controls.png` | Shows S3 security controls such as Block Public Access, versioning, and default encryption. |
+| `10-iam-users-model.png` | Shows the IAM users representing the simulated Developer, Data Analyst, and Security Auditor identities. |
+| `11-iam-groups-model.png` | Shows the IAM groups used to assign permissions based on team responsibilities. |
+| `12-group-policy-attachments.png` | Shows the least privilege policies attached to IAM groups. |
+| `13-developer-least-privilege-policy.png` | Shows the final Developer policy with scoped S3 and CloudWatch permissions. |
+| `14-data-analyst-mfa-trust-policy.png` | Shows the Data Analyst role trust policy requiring MFA before role assumption. |
+| `15-data-analyst-role-readonly-policy.png` | Shows the Data Analyst role permission policy with read-only access to approved reports. |
+| `16-security-auditor-readonly-policy.png` | Shows the Security Auditor read-only policy for IAM and Access Analyzer review. |
+| `17-access-analyzer-no-external-findings.png` | Shows IAM Access Analyzer review results with no unintended external access findings. |
+| `18-developer-production-access-denied.png` | Shows that the Developer is denied access to protected production S3 data. |
+| `19-security-auditor-admin-actions-denied.png` | Shows that the Security Auditor cannot perform administrative IAM actions. |
+| `20-cloudtrail-assumerole-detection.png` | Shows CloudTrail Event History evidence for STS AssumeRole activity. |
+
+## Why These Screenshots Matter
+
+These screenshots were selected because they demonstrate the complete before-and-after security lifecycle of the lab:
+
+1. The infrastructure is defined and managed as code.
+2. The insecure baseline is documented but not left active.
+3. AWS resources are separated by environment and purpose.
+4. IAM users and groups model realistic team responsibilities.
+5. Least privilege policies are attached through groups.
+6. Sensitive access uses temporary STS credentials and MFA-protected role assumption.
+7. Access Analyzer is used to review external exposure.
+8. CloudTrail provides audit evidence for sensitive role assumption activity.
+9. Positive and negative tests prove that allowed access works and unauthorized access is denied.
+
+## Sanitization Notes
+
+Screenshots in this folder should not include sensitive values.
+
+Do not commit screenshots that expose:
+
+- AWS access keys
+- AWS secret access keys
+- AWS session tokens
+- MFA codes
+- Full raw CloudTrail payloads with sensitive metadata
+- Terraform state content
+- Private backend configuration
+- Local `terraform.tfvars` values
+
+Account IDs, ARNs, and resource names may be partially masked when appropriate.
